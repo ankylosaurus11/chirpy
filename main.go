@@ -16,10 +16,17 @@ func main() {
 		Handler: mux,
 	}
 
-	mux.Handle("/", fs)
+	mux.Handle("/app/", http.StripPrefix("/app", fs))
+	mux.HandleFunc("/healthz", handlerReadiness)
 
 	fmt.Printf("Server starting on :%s...\n", port)
 	if err := server.ListenAndServe(); err != nil {
 		fmt.Println("Error starting server:", err)
 	}
+}
+
+func handlerReadiness(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "text/plain; charset=utf-8")
+	w.WriteHeader(200)
+	w.Write([]byte("OK"))
 }
