@@ -3,15 +3,19 @@ package main
 import (
 	"encoding/json"
 	"net/http"
+
+	"github.com/ankylosaurus11/chirpy/internal/auth"
+	"github.com/ankylosaurus11/chirpy/internal/database"
 )
 
-type createUserRequest struct {
-	Email string `json:"email"`
+type createAuthRequest struct {
+	Email    string `json:"email"`
+	Password string `json:"password"`
 }
 
 func (cfg *apiConfig) CreateUser(w http.ResponseWriter, r *http.Request) {
 	decoder := json.NewDecoder(r.Body)
-	params := createUserRequest{}
+	params := createAuthRequest{}
 	err := decoder.Decode(&params)
 	if err != nil {
 		respondWithError(w, http.StatusInternalServerError, "Couldn't decode parameters", err)
@@ -23,7 +27,16 @@ func (cfg *apiConfig) CreateUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	usr, err := cfg.db.CreateUser(r.Context(), params.Email)
+	hashedPassword, err := auth.HashPassword(params.Password)
+	if err != nil {
+		respondWithError(w, http.StatusInternalServerError, "Couldn't hash password", err)
+		return
+	}
+
+	usr, err := cfg.db.CreateUser(r.Context(), database.CreateUserParams{
+		Email:          params.Email,
+		HashedPassword: hashedPassword,
+	})
 	if err != nil {
 		respondWithError(w, http.StatusInternalServerError, "Error creating user", err)
 		return

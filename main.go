@@ -84,6 +84,7 @@ func main() {
 	mux.HandleFunc("POST /admin/reset", apiCfg.handlerReset)
 	mux.HandleFunc("POST /api/chirps", apiCfg.handlerCreateChirp)
 	mux.HandleFunc("POST /api/users", apiCfg.CreateUser)
+	mux.HandleFunc("POST /api/login", apiCfg.handlerLogin)
 
 	fmt.Printf("Server starting on :%s...\n", port)
 	if err := server.ListenAndServe(); err != nil {
