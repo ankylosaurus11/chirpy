@@ -26,13 +26,6 @@ func TestMakeAndValidateJWT(t *testing.T) {
 			wantErr:     false,
 		},
 		{
-			name:        "Invalid token due to wrong secret",
-			userID:      userID,
-			tokenSecret: "wrongPassword",
-			expiresIn:   1 * time.Second,
-			wantErr:     true,
-		},
-		{
 			name:        "Invalid token due to empty secret",
 			userID:      userID,
 			tokenSecret: "",

@@ -1,6 +1,7 @@
 package auth
 
 import (
+	"errors"
 	"fmt"
 	"time"
 
@@ -9,6 +10,13 @@ import (
 )
 
 func MakeJWT(userID uuid.UUID, tokenSecret string, expiresIn time.Duration) (string, error) {
+	if tokenSecret == "" {
+		return "", errors.New("tokenSecret is empty")
+	}
+	if expiresIn <= 0 {
+		return "", errors.New("token duration needs to exceed 0")
+	}
+
 	now := time.Now()
 
 	expirationTime := jwt.NewNumericDate(now.Add(expiresIn))
@@ -29,6 +37,13 @@ func MakeJWT(userID uuid.UUID, tokenSecret string, expiresIn time.Duration) (str
 }
 
 func ValidateJWT(tokenString, tokenSecret string) (uuid.UUID, error) {
+	if tokenString == "" {
+		return uuid.UUID{}, errors.New("tokenString is empty")
+	}
+	if tokenSecret == "" {
+		return uuid.UUID{}, errors.New("tokenSecret is empty")
+	}
+
 	claims := &jwt.RegisteredClaims{}
 
 	var parsedToken *jwt.Token
