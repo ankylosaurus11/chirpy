@@ -9,8 +9,9 @@ import (
 )
 
 type createAuthRequest struct {
-	Email    string `json:"email"`
-	Password string `json:"password"`
+	Email     string `json:"email"`
+	Password  string `json:"password"`
+	ExpiresIn int    `json:"expires_in_seconds"`
 }
 
 func (cfg *apiConfig) CreateUser(w http.ResponseWriter, r *http.Request) {
