@@ -43,7 +43,7 @@ func TestMakeAndValidateJWT(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			token, err := MakeJWT(tt.userID, tt.tokenSecret, tt.expiresIn)
+			token, err := MakeJWT(tt.userID, tt.tokenSecret)
 
 			if (err != nil) != tt.wantErr {
 				t.Errorf("MakeJWT() error = %v, wantErr = %v", err, tt.wantErr)

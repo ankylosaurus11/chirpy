@@ -9,17 +9,14 @@ import (
 	"github.com/google/uuid"
 )
 
-func MakeJWT(userID uuid.UUID, tokenSecret string, expiresIn time.Duration) (string, error) {
+func MakeJWT(userID uuid.UUID, tokenSecret string) (string, error) {
 	if tokenSecret == "" {
 		return "", errors.New("tokenSecret is empty")
-	}
-	if expiresIn <= 0 {
-		return "", errors.New("token duration needs to exceed 0")
 	}
 
 	now := time.Now()
 
-	expirationTime := jwt.NewNumericDate(now.Add(expiresIn))
+	expirationTime := jwt.NewNumericDate(now.Add(time.Minute * 60))
 
 	newToken := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.RegisteredClaims{
 		Issuer:    "chirpy",
