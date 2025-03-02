@@ -65,5 +65,5 @@ func (cfg *apiConfig) handlerRevokeToken(w http.ResponseWriter, r *http.Request)
 		Token: refreshToken.Token,
 	})
 
-	respondWithJSON(w, 204, nil)
+	w.WriteHeader(http.StatusNoContent)
 }

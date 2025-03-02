@@ -93,6 +93,8 @@ func main() {
 	mux.HandleFunc("POST /api/refresh", apiCfg.handlerRefreshToken)
 	mux.HandleFunc("POST /api/revoke", apiCfg.handlerRevokeToken)
 
+	mux.HandleFunc("PUT /api/users", apiCfg.handlerUpdatePassword)
+
 	fmt.Printf("Server starting on :%s...\n", port)
 	if err := server.ListenAndServe(); err != nil {
 		fmt.Println("Error starting server:", err)
