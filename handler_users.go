@@ -48,6 +48,7 @@ func (cfg *apiConfig) CreateUser(w http.ResponseWriter, r *http.Request) {
 		UpdatedAt: usr.UpdatedAt,
 		Email:     usr.Email,
 	}
+
 	w.Header().Set("Content-Type", "application/json")
 	dat, err := json.Marshal(userResponse)
 	if err != nil {
