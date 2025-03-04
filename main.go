@@ -95,6 +95,8 @@ func main() {
 
 	mux.HandleFunc("PUT /api/users", apiCfg.handlerUpdatePassword)
 
+	mux.HandleFunc("DELETE /api/chirps/{chirpID}", apiCfg.handlerDeleteChirp)
+
 	fmt.Printf("Server starting on :%s...\n", port)
 	if err := server.ListenAndServe(); err != nil {
 		fmt.Println("Error starting server:", err)
