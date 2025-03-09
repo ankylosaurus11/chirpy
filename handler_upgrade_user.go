@@ -3,13 +3,16 @@ package main
 import (
 	"encoding/json"
 	"net/http"
+
+	"github.com/ankylosaurus11/chirpy/internal/database"
+	"github.com/google/uuid"
 )
 
 func (cfg *apiConfig) handlerUpgradeUser(w http.ResponseWriter, r *http.Request) {
 	type parameters struct {
 		Event string `json:"event"`
 		Data  struct {
-			UserID string `json:"user_id"`
+			UserID uuid.UUID `json:"user_id"`
 		} `json:"data"`
 	}
 
@@ -21,4 +24,20 @@ func (cfg *apiConfig) handlerUpgradeUser(w http.ResponseWriter, r *http.Request)
 		respondWithError(w, http.StatusInternalServerError, "Couldn't decode parameters", err)
 		return
 	}
+
+	if params.Event != "user.upgraded" {
+		w.WriteHeader(http.StatusNoContent)
+		return
+	}
+
+	err = cfg.db.UpgradeRed(r.Context(), database.UpgradeRedParams{
+		IsChirpyRed: true,
+		ID:          params.Data.UserID,
+	})
+	if err != nil {
+		respondWithError(w, http.StatusNotFound, "User not found", err)
+		return
+	}
+
+	w.WriteHeader(http.StatusNoContent)
 }
